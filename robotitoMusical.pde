@@ -69,15 +69,27 @@ void draw() {
 }
 
 void mousePressed() {
-  // TODO restrict card selection to just one!
-  for (Card currentCard : allCards) {
-    if (currentCard.isPointInside(mouseX, mouseY)) {
+  boolean foundOne = false;
+  for (int i = allCards.size()-1; i >= 0; i--) {
+    Card currentCard = allCards.get(i);
+    if (currentCard.isPointInside(mouseX, mouseY) && !foundOne) {
       selectedCard =  currentCard;
       currentCard.setIsSelected(true);
+      foundOne = true;
     } else {
       currentCard.setIsSelected(false);
     }
   }
+
+
+  //for (Card currentCard : allCards) {
+  //  if (currentCard.isPointInside(mouseX, mouseY)) {
+  //    selectedCard =  currentCard;
+  //    currentCard.setIsSelected(true);
+  //  } else {
+  //    currentCard.setIsSelected(false);
+  //  }
+  //}
 }
 void mouseDragged() {
   for (Card currentCard : allCards) {
@@ -113,7 +125,7 @@ void keyPressed() {
       cardColor = green; // verde
     } else if (key == 'y' || key == 'Y') {
       cardColor = yellow; // amarillo
-    } else if (key == 'n' || key == 'N'){
+    } else if (key == 'n' || key == 'N') {
       cardColor = noteColor;
     }
   }
