@@ -61,11 +61,13 @@ void setup() {
 }
 
 void draw() {
+  drawMat();
   displayCards();
   if (!stopRobot) {
     robotito.update();
   }
   robotito.drawRobotitoAndLights();
+  checkIfNewCardNeeded();
 }
 
 void mousePressed() {
@@ -80,16 +82,6 @@ void mousePressed() {
       currentCard.setIsSelected(false);
     }
   }
-
-
-  //for (Card currentCard : allCards) {
-  //  if (currentCard.isPointInside(mouseX, mouseY)) {
-  //    selectedCard =  currentCard;
-  //    currentCard.setIsSelected(true);
-  //  } else {
-  //    currentCard.setIsSelected(false);
-  //  }
-  //}
 }
 void mouseDragged() {
   for (Card currentCard : allCards) {
@@ -139,10 +131,22 @@ void addCard(int x, int y) {
   }
 }
 
-void displayCards() {
+void drawMat() {
+  int initPixel = 60;
+  int maxPixel = initPixel + (cardSize+40)*4 ;
   back.beginDraw();
   back.background(255);
+  for (int i=initPixel; i<= maxPixel; i=i+cardSize+40) {
+    back.stroke(0);
+    back.strokeWeight(1);
+    back.line(initPixel, i, maxPixel, i);
+  }
+  for (int i=initPixel; i<= maxPixel; i=i+cardSize+40) {
+    back.line(i, initPixel, i, maxPixel);
+  }
   back.endDraw();
+}
+void displayCards() {
   for (Card currentCard : allCards) {
     currentCard.addToBackground();
   }
@@ -164,4 +168,28 @@ void initWithCards() {
   allCards.add(new ColorCard(x, y, cardSize, blue, 4));
   x = x + cardSize + 10;
   allCards.add(new MusicalCard(x, y, cardSize, noteColor, 5));
+}
+
+void checkIfNewCardNeeded() {
+  int x = 0 + cardSize/2 + 10;
+  int y = height - cardSize/2 -10;
+  if (back.get(x, y) != green) {
+    allCards.add(new ColorCard(x, y, cardSize, green));
+  }
+  x = x + cardSize + 10;
+  if (back.get(x, y) != red) {
+    allCards.add(new ColorCard(x, y, cardSize, red));
+  }
+  x = x + cardSize + 10;
+  if (back.get(x, y) != yellow) {
+    allCards.add(new ColorCard(x, y, cardSize, yellow));
+  }
+  x = x + cardSize + 10;
+  if (back.get(x, y) != blue) {
+    allCards.add(new ColorCard(x, y, cardSize, blue));
+  }
+  x = x + cardSize + 10;
+  if (back.get(x, y) != noteColor) {
+    allCards.add(new MusicalCard(x, y, cardSize, noteColor));
+  }
 }
