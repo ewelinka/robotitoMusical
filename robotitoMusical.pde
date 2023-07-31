@@ -11,7 +11,7 @@ PImage note;
 
 Robotito robotito;
 PGraphics back;
-color cardColor, yellow, blue, green, red, white, markerColor, noteColor;
+color cardColor, yellow, blue, green, red, white, markerColor, strokeColor, noteColor;
 int cardSize;
 boolean puttingCards, musicalMode, stopRobot;
 int offsetSensing;
@@ -41,6 +41,7 @@ void setup() {
   white = #FFFFFF;
   markerColor = #000000;
   noteColor = #FFFFA50A;
+  strokeColor = 185;
 
   cardColor = green;
   cardSize = 100;
@@ -72,6 +73,14 @@ void draw() {
 
 void mousePressed() {
   boolean foundOne = false;
+  if (dist(robotito.xpos, robotito.ypos, mouseX, mouseY) < robotito.size/2)
+  {
+    robotito.setIsSelected(true);
+    foundOne = true;
+  }else{
+    robotito.setIsSelected(false);
+  }
+  
   for (int i = allCards.size()-1; i >= 0; i--) {
     Card currentCard = allCards.get(i);
     if (currentCard.isPointInside(mouseX, mouseY) && !foundOne) {
@@ -89,8 +98,7 @@ void mouseDragged() {
       currentCard.updatePosition(mouseX, mouseY);
     }
   }
-  //if (robotito.isPointInside(mouseX, mouseY))
-  if (dist(robotito.xpos, robotito.ypos, mouseX, mouseY) < robotito.size/2)
+  if ((dist(robotito.xpos, robotito.ypos, mouseX, mouseY) < robotito.size/2) && robotito.isSelected)
   {
     robotito.updatePosition(mouseX, mouseY);
   }
