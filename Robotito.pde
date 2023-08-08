@@ -27,17 +27,13 @@ class Robotito { //<>//
     // calculate offset necesary to change direction in the middle of the card depending direction
     int offsetX = directionX*offsetSensing*-1;
     int offsetY = directionY*offsetSensing*-1;
-    boolean awayFromCards = true; // will be used to undo ignoredId and allow to repeat violet
+
     for (Card currentCard : allCards) {
       if (currentCard.isPointInside(xpos+offsetX, ypos+offsetY)) {
-        awayFromCards = false;
         if (currentCard.id != ignoredId) {
           processColorAndId(back.get(xpos+offsetX, ypos+offsetY), currentCard.id);
         }
       }
-    }
-    if (awayFromCards) {
-      ignoredId = -1;
     }
   }
   void drawRobotitoAndLights() {
