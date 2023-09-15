@@ -7,16 +7,14 @@ class MusicalCard extends ColorCard {
   }
 
   void addToBackground() {
-    back.beginDraw();
-    back.fill(cardColor);
+    fill(cardColor);
     if (isSelected) {
-      back.stroke(markerColor);
-      back.strokeWeight(strokeThickness);
+      stroke(markerColor);
+      strokeWeight(strokeThickness);
     } else {
-      back.noStroke();
+      noStroke();
     }
-    back.rect(xpos, ypos, cardSize, cardSize);
-    back.image(note, xpos, ypos, cardSize, cardSize);
-    back.endDraw();
+    rect(xpos, ypos, cardSize, cardSize);
+    image(note, xpos, ypos, cardSize, cardSize);
   }
 }

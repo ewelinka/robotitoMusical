@@ -28,10 +28,10 @@ class Robotito { //<>//
     int offsetX = directionX*offsetSensing*-1;
     int offsetY = directionY*offsetSensing*-1;
 
-    for (Card currentCard : allCards) {
+    for (ColorCard currentCard : allCards) {
       if (currentCard.isPointInside(xpos+offsetX, ypos+offsetY)) {
         if (currentCard.id != ignoredId) {
-          processColorAndId(back.get(xpos+offsetX, ypos+offsetY), currentCard.id);
+          processColorAndId(currentCard.cardColor, currentCard.id);
         }
       }
     }
@@ -42,6 +42,9 @@ class Robotito { //<>//
     translate(xpos, ypos);
     draw4lights();
     drawDirectionLights();
+    if (musicalMode) {
+      drawMusicalModeLights();
+    }
   }
 
   void updatePosition(int x, int y) {
@@ -51,6 +54,7 @@ class Robotito { //<>//
   void drawRobotito() {
     fill(colorRobotito);
     stroke(strokeColor);
+    strokeWeight(1);
     circle(xpos, ypos, size);
     fill(255);
     noStroke();
@@ -136,7 +140,55 @@ class Robotito { //<>//
     circle(0, 0, ledSize);
     popMatrix();
   }
-
+  void drawMusicalModeLights() {
+    if (activeDirection == 0) {
+      stroke(strokeColor);
+      for (int i = 0; i<4; i++) {
+        pushMatrix();
+        rotate(radians(90*i)+ radians(360/24)*1);
+        translate(0, -ledDistance);
+        fill(noteColor);
+        circle(0, 0, ledSize);
+        popMatrix();
+        pushMatrix();
+        rotate(radians(90*i)+ radians(360/24)*-1);
+        translate(0, -ledDistance);
+        fill(noteColor);
+        circle(0, 0, ledSize);
+        popMatrix();
+      }
+    } else {
+      switch(activeDirection) {
+      case 1: // green
+        drawMusicalIndicators(0);
+        break;
+      case 2: // yellow
+        drawMusicalIndicators(90);
+        break;
+      case 3: // red
+        drawMusicalIndicators(180);
+        break;
+      case 4: // blue
+        drawMusicalIndicators(270);
+        break;
+      }
+    }
+  }
+  
+  void drawMusicalIndicators(int rotation){
+        pushMatrix();
+        rotate(radians(rotation)+ radians(360/24)*1);
+        translate(0, -ledDistance);
+        fill(noteColor);
+        circle(0, 0, ledSize);
+        popMatrix();
+        pushMatrix();
+        rotate(radians(rotation)+ radians(360/24)*-1);
+        translate(0, -ledDistance);
+        fill(noteColor);
+        circle(0, 0, ledSize);
+        popMatrix();
+  }
 
   void processColorAndId(color currentColor, int id) {
     if (currentColor == green || currentColor == yellow || currentColor == red || currentColor == blue || currentColor == noteColor) {
