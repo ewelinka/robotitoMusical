@@ -1,5 +1,5 @@
 class Robotito { //<>//
-  int ypos, xpos, speed, size, directionX, directionY, ledSize, activeDirection;
+  int ypos, xpos, speed, size, directionX, directionY, ledSize, activeDirection, arrowSize, arrowShift;
   color colorRobotito, lastColor;
   float ledDistance;
   boolean isSelected;
@@ -9,6 +9,8 @@ class Robotito { //<>//
     speed = 1;
     size = 100;
     ledSize= 5;
+    arrowSize = 14;
+    arrowShift = 9;
     ledDistance = size*0.52/2-ledSize/2;
     directionX = directionY = activeDirection = 0;
     colorRobotito = #FCB603;
@@ -30,7 +32,7 @@ class Robotito { //<>//
 
     for (ColorCard currentCard : allCards) {
       if (currentCard.isPointInside(xpos+offsetX, ypos+offsetY)) {
-        if (currentCard.id != ignoredId) {
+        if (currentCard.id != ignoredId && !isSelected) {
           processColorAndId(currentCard.cardColor, currentCard.id);
         }
       }
@@ -40,16 +42,21 @@ class Robotito { //<>//
     drawRobotito();
     //circle(xpos+offsetX, ypos+offsetY, 10); // debugging sensing position
     translate(xpos, ypos);
-    draw4lights();
+    //draw4lights();
+    drawArrows();
     drawDirectionLights();
     if (musicalMode) {
       drawMusicalModeLights();
     }
   }
 
-  void updatePosition(int x, int y) {
+  void updatePositionDragged(int x, int y) {
+    directionX = 0;
+    directionY = 0;
+    activeDirection = 0;
     xpos = x;
     ypos = y;
+    ignoredId = -1;
   }
   void drawRobotito() {
     fill(colorRobotito);
@@ -82,37 +89,82 @@ class Robotito { //<>//
     popMatrix();
     //yellow
     pushMatrix();
-    rotate(radians(90));
+    rotate(radians(270));
     translate(0, -ledDistance);
     fill(yellow);
     circle(0, 0, ledSize);
     popMatrix();
     //blue
     pushMatrix();
-    rotate(radians(270));
+    rotate(radians(90));
     translate(0, -ledDistance);
     fill(blue);
     circle(0, 0, ledSize);
     popMatrix();
   }
+
+  void drawArrows() {
+    //strokeWeight(4);
+    pushMatrix();
+    translate(0, -ledDistance - arrowShift);
+    fill(green);
+    drawArrow(arrowSize);
+    popMatrix();
+    // red light
+    pushMatrix();
+    rotate(radians(180));
+    translate(0, -ledDistance - arrowShift);
+    fill(red);
+    drawArrow(arrowSize);
+    popMatrix();
+    //yellow
+    pushMatrix();
+    rotate(radians(270));
+    translate(0, -ledDistance - arrowShift);
+    fill(yellow);
+    drawArrow(arrowSize);
+    popMatrix();
+    //blue
+    pushMatrix();
+    rotate(radians(90));
+    translate(0, -ledDistance - arrowShift);
+    fill(blue);
+    drawArrow(arrowSize);
+    popMatrix();
+  }
+  void drawArrow(int aSize) {
+    int triangleSize = 8; 
+    triangle(0,-aSize,triangleSize/2,-aSize+triangleSize,-triangleSize/2,-aSize+triangleSize);
+    // CENTER MODE!!
+    rect(0,0-(aSize-triangleSize)/2,triangleSize/2,(aSize-triangleSize)); 
+  }
+
+
   void drawDirectionLights() {
     switch(activeDirection) {
     case 1: // green
       drawArc(0, green);
       break;
-    case 2: // yellow
-      drawArc(90, yellow);
+    case 2: // blue
+      drawArc(90, blue);
       break;
     case 3: // red
       drawArc(180, red);
       break;
-    case 4: // blue
-      drawArc(270, blue);
+    case 4: // yellow
+      drawArc(270, yellow);
       break;
     }
   }
 
   void drawArc(int rotation, color ledArcColor) {
+    pushMatrix();
+    rotate(radians(rotation));
+    translate(0, -ledDistance);
+    fill(ledArcColor);
+    stroke(strokeColor);
+    circle(0, 0, ledSize);
+    popMatrix();
     pushMatrix();
     rotate(radians(rotation) + radians(360/24));
     translate(0, -ledDistance);
@@ -139,19 +191,27 @@ class Robotito { //<>//
     fill(ledArcColor);
     circle(0, 0, ledSize);
     popMatrix();
+    if (musicalMode) {
+      pushMatrix();
+      rotate(radians(rotation)+radians(360/24)*3);
+      translate(0, -ledDistance);
+      fill(noteColor);
+      circle(0, 0, ledSize);
+      popMatrix();
+      pushMatrix();
+      rotate(radians(rotation)-radians(360/24)*3);
+      translate(0, -ledDistance);
+      fill(noteColor);
+      circle(0, 0, ledSize);
+      popMatrix();
+    }
   }
   void drawMusicalModeLights() {
     if (activeDirection == 0) {
       stroke(strokeColor);
-      for (int i = 0; i<4; i++) {
+      for (int i = 0; i<24; i++) {
         pushMatrix();
-        rotate(radians(90*i)+ radians(360/24)*1);
-        translate(0, -ledDistance);
-        fill(noteColor);
-        circle(0, 0, ledSize);
-        popMatrix();
-        pushMatrix();
-        rotate(radians(90*i)+ radians(360/24)*-1);
+        rotate(radians(360/24)*i);
         translate(0, -ledDistance);
         fill(noteColor);
         circle(0, 0, ledSize);
@@ -162,32 +222,32 @@ class Robotito { //<>//
       case 1: // green
         drawMusicalIndicators(0);
         break;
-      case 2: // yellow
+      case 2: // blue
         drawMusicalIndicators(90);
         break;
       case 3: // red
         drawMusicalIndicators(180);
         break;
-      case 4: // blue
+      case 4: // yellow
         drawMusicalIndicators(270);
         break;
       }
     }
   }
-  
-  void drawMusicalIndicators(int rotation){
-        pushMatrix();
-        rotate(radians(rotation)+ radians(360/24)*1);
-        translate(0, -ledDistance);
-        fill(noteColor);
-        circle(0, 0, ledSize);
-        popMatrix();
-        pushMatrix();
-        rotate(radians(rotation)+ radians(360/24)*-1);
-        translate(0, -ledDistance);
-        fill(noteColor);
-        circle(0, 0, ledSize);
-        popMatrix();
+
+  void drawMusicalIndicators(int rotation) {
+    pushMatrix();
+    rotate(radians(rotation)+ radians(360/24)*3);
+    translate(0, -ledDistance);
+    fill(noteColor);
+    circle(0, 0, ledSize);
+    popMatrix();
+    pushMatrix();
+    rotate(radians(rotation)+ radians(360/24)*-3);
+    translate(0, -ledDistance);
+    fill(noteColor);
+    circle(0, 0, ledSize);
+    popMatrix();
   }
 
   void processColorAndId(color currentColor, int id) {
@@ -213,7 +273,7 @@ class Robotito { //<>//
           directionY = -1;
           directionX = 0;
           activeDirection = 1;
-        } else if (currentColor == yellow) {
+        } else if (currentColor == blue) {
           directionY = 0;
           directionX = 1;
           activeDirection = 2;
@@ -221,7 +281,7 @@ class Robotito { //<>//
           directionY = 1;
           directionX = 0;
           activeDirection = 3;
-        } else if (currentColor == blue) {
+        } else if (currentColor == yellow) {
           directionY = 0;
           directionX = -1;
           activeDirection = 4;
