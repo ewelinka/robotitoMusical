@@ -41,6 +41,7 @@ class Robotito { //<>//
   void drawRobotitoAndLights() {
     drawRobotito();
     //circle(xpos+offsetX, ypos+offsetY, 10); // debugging sensing position
+    pushMatrix();
     translate(xpos, ypos);
     //draw4lights();
     drawArrows();
@@ -48,6 +49,7 @@ class Robotito { //<>//
     if (musicalMode) {
       drawMusicalModeLights();
     }
+    popMatrix();
   }
 
   void updatePositionDragged(int x, int y) {
@@ -104,7 +106,6 @@ class Robotito { //<>//
   }
 
   void drawArrows() {
-    //strokeWeight(4);
     pushMatrix();
     translate(0, -ledDistance - arrowShift);
     fill(green);
@@ -133,10 +134,10 @@ class Robotito { //<>//
     popMatrix();
   }
   void drawArrow(int aSize) {
-    int triangleSize = 8; 
-    triangle(0,-aSize,triangleSize/2,-aSize+triangleSize,-triangleSize/2,-aSize+triangleSize);
+    int triangleSize = 8;
+    triangle(0, -aSize, triangleSize/2, -aSize+triangleSize, -triangleSize/2, -aSize+triangleSize);
     // CENTER MODE!!
-    rect(0,0-(aSize-triangleSize)/2,triangleSize/2,(aSize-triangleSize)); 
+    rect(0, 0-(aSize-triangleSize)/2, triangleSize/2, (aSize-triangleSize));
   }
 
 
@@ -293,20 +294,31 @@ class Robotito { //<>//
 
   void playNoteFromColor(int colorNow) {
     switch(colorNow) {
-    case -16588774:
-      out.playNote(0, 0.5, 300);
+    case -16588774: // green
+      //out.playNote(0, 0.5, 300);
+      out.playNote(0, 0.15, "E4");
+      out.playNote(0.2, 0.15, "D4");
+      out.playNote(0.4, 0.15, "C4");
+      out.playNote(0.6, 0.15, "D4");
       break;
       //case -1:
       //  toReturn = "white";
       //  break;
-    case -331743:
-      out.playNote(0, 0.5, 500);
+    case -331743: // yellow
+      out.playNote(0, 0.15, "E4");
+      out.playNote(0.2, 0.15, "G4");
+      out.playNote(0.4, 0.3, "G4");
       break;
-    case -389333:
-      out.playNote(0, 0.5, 800);
+    case -389333: // red
+      out.playNote(0, 0.15, "D4");
+      out.playNote(0.2, 0.15, "D4");
+      out.playNote(0.4, 0.3, "D4");
+
       break;
-    case -14584326:
-      out.playNote(0, 0.5, 200);
+    case -14584326: // blue
+      out.playNote(0, 0.15, "E4");
+      out.playNote(0.2, 0.15, "E4");
+      out.playNote(0.4, 0.3, "E4");
       break;
       //case -16777216:
       //  toReturn = "marker";

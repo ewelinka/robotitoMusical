@@ -7,13 +7,13 @@ import ddf.minim.ugens.*;
 
 Minim minim;
 AudioOutput out;
-PImage note;
+PImage note, baby;
 
 Robotito robotito;
 
 color cardColor, yellow, blue, green, red, white, markerColor, strokeColor, noteColor;
 int cardSize;
-boolean puttingCards, musicalMode, stopRobot;
+boolean puttingCards, musicalMode, stopRobot, babyVisible;
 int offsetSensing;
 int strokeThickness;
 
@@ -45,6 +45,7 @@ void setup() {
   cardSize = 100;
   puttingCards = true;
   stopRobot = false;
+  babyVisible = false;
   offsetSensing = cardSize/2;
   ignoredId = 0;
   strokeThickness = 4;
@@ -57,9 +58,11 @@ void setup() {
   out = minim.getLineOut();
   musicalMode = false;
   note = loadImage("notes.png");
+  baby = loadImage("baby.jpeg");
 }
 
 void draw() {
+  
   drawMat();
   displayCards();
   if (!stopRobot) {
@@ -67,9 +70,10 @@ void draw() {
   }
   robotito.drawRobotitoAndLights();
   checkIfNewCardNeeded();
+  drawBaby();
 }
 
-void mouseReleased(){
+void mouseReleased() {
   robotito.setIsSelected(false);
 }
 
@@ -79,10 +83,10 @@ void mousePressed() {
   {
     robotito.setIsSelected(true);
     foundOne = true;
-  }else{
+  } else {
     robotito.setIsSelected(false);
   }
-  
+
   for (int i = allCards.size()-1; i >= 0; i--) {
     ColorCard currentCard = allCards.get(i);
     if (currentCard.isPointInside(mouseX, mouseY) && !foundOne) {
@@ -120,15 +124,7 @@ void keyPressed() {
     }
   } else {
     if (key == 'b' || key == 'B') {
-      cardColor = blue; // azul
-    } else if (key == 'r' || key == 'R') {
-      cardColor = red; // rojo
-    } else if (key == 'g' || key == 'G') {
-      cardColor = green; // verde
-    } else if (key == 'y' || key == 'Y') {
-      cardColor = yellow; // amarillo
-    } else if (key == 'n' || key == 'N') {
-      cardColor = noteColor;
+      babyVisible = !babyVisible;
     }
   }
 }
@@ -198,5 +194,11 @@ void checkIfNewCardNeeded() {
   x = x + cardSize + 10;
   if (get(x, y) != noteColor) {
     allCards.add(new MusicalCard(x, y, cardSize, noteColor));
+  }
+}
+
+void drawBaby() {
+  if (babyVisible) {
+    image(baby, 20, 400, 50, 50);
   }
 }
