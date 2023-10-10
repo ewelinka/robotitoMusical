@@ -142,19 +142,22 @@ class Robotito { //<>//
 
 
   void drawDirectionLights() {
-    switch(activeDirection) {
-    case 1: // green
-      drawArc(0, green);
-      break;
-    case 2: // blue
-      drawArc(90, blue);
-      break;
-    case 3: // red
-      drawArc(180, red);
-      break;
-    case 4: // yellow
-      drawArc(270, yellow);
-      break;
+    blinkingTime++;
+    if (blinkingTime < blinkingPeriod/2 || blinkingTime > blinkingPeriod) {
+      switch(activeDirection) {
+      case 1: // green
+        drawArc(0, green);
+        break;
+      case 2: // blue
+        drawArc(90, blue);
+        break;
+      case 3: // red
+        drawArc(180, red);
+        break;
+      case 4: // yellow
+        drawArc(270, yellow);
+        break;
+      }
     }
   }
 
@@ -267,6 +270,7 @@ class Robotito { //<>//
           out.playNote(0.3, 0.1, 200);
         }
       } else {
+        blinkingTime = 0;
         if (musicalMode) {
           playNoteFromColor(currentColor);
         }
