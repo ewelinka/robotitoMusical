@@ -143,8 +143,14 @@ class Robotito { //<>//
 
   void drawDirectionLights() {
     blinkingTime++;
+    if (blinkingTime > blinkingPeriod) {
+      stopRobot = false;
+    }
     if (blinkingTime < blinkingPeriod/2 || blinkingTime > blinkingPeriod) {
       switch(activeDirection) {
+      case 0:
+        drawGreenLed();
+        break;
       case 1: // green
         drawArc(0, green);
         break;
@@ -160,6 +166,16 @@ class Robotito { //<>//
       }
     }
   }
+
+  void drawGreenLed() {
+    pushMatrix();
+    translate(0, -ledDistance);
+    fill(green);
+    stroke(strokeColor);
+    circle(0, 0, ledSize);
+    popMatrix();
+  }
+
 
   void drawArc(int rotation, color ledArcColor) {
     pushMatrix();
@@ -221,6 +237,7 @@ class Robotito { //<>//
         circle(0, 0, ledSize);
         popMatrix();
       }
+      drawGreenLed();
     } else {
       switch(activeDirection) {
       case 1: // green
@@ -271,6 +288,7 @@ class Robotito { //<>//
         }
       } else {
         blinkingTime = 0;
+        stopRobot = true;
         if (musicalMode) {
           playNoteFromColor(currentColor);
         }

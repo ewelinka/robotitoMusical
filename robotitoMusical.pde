@@ -13,7 +13,7 @@ Robotito robotito;
 
 color cardColor, yellow, blue, green, red, white, markerColor, strokeColor, noteColor;
 int cardSize;
-boolean puttingCards, musicalMode, stopRobot, babyVisible, nowBlinking;
+boolean puttingCards, musicalMode, stopRobot, babyVisible;
 int blinkingTime;
 int blinkingPeriod;
 int offsetSensing;
@@ -49,8 +49,8 @@ void setup() {
   puttingCards = true;
   stopRobot = false;
   babyVisible = false;
-  nowBlinking = false;
-  blinkingTime = 0;
+
+  blinkingTime = 120;
   blinkingPeriod = 120;
   offsetSensing = cardSize/2;
   ignoredId = 0;
