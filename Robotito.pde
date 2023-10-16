@@ -40,11 +40,11 @@ class Robotito { //<>//
   }
   void drawRobotitoAndLights() {
     drawRobotito();
-    //circle(xpos+offsetX, ypos+offsetY, 10); // debugging sensing position
     pushMatrix();
     translate(xpos, ypos);
-    //draw4lights();
+    // draw4lights
     drawArrows();
+    updateBlinking();
     drawDirectionLights();
     if (musicalMode) {
       drawMusicalModeLights();
@@ -142,11 +142,8 @@ class Robotito { //<>//
 
 
   void drawDirectionLights() {
-    blinkingTime++;
-    if (blinkingTime > blinkingPeriod) {
-      stopRobot = false;
-    }
-    if (blinkingTime < blinkingPeriod/2 || blinkingTime > blinkingPeriod) {
+    boolean showLights = shouldShowLights();
+    if (showLights) {
       switch(activeDirection) {
       case 0:
         drawGreenLed();
@@ -165,6 +162,18 @@ class Robotito { //<>//
         break;
       }
     }
+  }
+
+  void updateBlinking() {
+    blinkingTime++;
+    if (blinkingTime > blinkingPeriod) {
+      stopRobot = false;
+    }
+  }
+
+  boolean shouldShowLights() {
+    boolean shouldShow = blinkingTime < blinkingPeriod/2 || blinkingTime > blinkingPeriod;
+    return shouldShow;
   }
 
   void drawGreenLed() {

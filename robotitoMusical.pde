@@ -13,12 +13,11 @@ Robotito robotito;
 
 color cardColor, yellow, blue, green, red, white, markerColor, strokeColor, noteColor;
 int cardSize;
-boolean puttingCards, musicalMode, stopRobot, babyVisible;
+boolean puttingCards, musicalMode, stopRobot;
 int blinkingTime;
 int blinkingPeriod;
 int offsetSensing;
 int strokeThickness;
-
 
 ColorCard selectedCard;
 int ignoredId;
@@ -48,7 +47,6 @@ void setup() {
   cardSize = 100;
   puttingCards = true;
   stopRobot = false;
-  babyVisible = false;
 
   blinkingTime = 120;
   blinkingPeriod = 120;
@@ -76,7 +74,6 @@ void draw() {
   }
   robotito.drawRobotitoAndLights();
   checkIfNewCardNeeded();
-  drawBaby();
 }
 
 void mouseReleased() {
@@ -128,16 +125,12 @@ void keyPressed() {
         addCard(mouseX, mouseY);
       }
     }
-  } else {
-    if (key == 'b' || key == 'B') {
-      babyVisible = !babyVisible;
-    }
   }
 }
 
 void addCard(int x, int y) {
   if (cardColor == noteColor) {
-    allCards.add(new MusicalCard(x, y, cardSize, cardColor));
+    allCards.add(new ImageCard(x, y, cardSize, cardColor));
   } else {
     allCards.add(new ColorCard(x, y, cardSize, cardColor));
   }
@@ -176,7 +169,7 @@ void initWithCards() {
   x = x + cardSize + 10;
   allCards.add(new ColorCard(x, y, cardSize, blue, 4));
   x = x + cardSize + 10;
-  allCards.add(new MusicalCard(x, y, cardSize, noteColor, 5));
+  allCards.add(new ImageCard(x, y, cardSize, noteColor, 5));
 }
 
 void checkIfNewCardNeeded() {
@@ -199,12 +192,6 @@ void checkIfNewCardNeeded() {
   }
   x = x + cardSize + 10;
   if (get(x, y) != noteColor) {
-    allCards.add(new MusicalCard(x, y, cardSize, noteColor));
-  }
-}
-
-void drawBaby() {
-  if (babyVisible) {
-    image(baby, 680, 400, 80, 80);
+    allCards.add(new ImageCard(x, y, cardSize, noteColor));
   }
 }
