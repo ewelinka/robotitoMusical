@@ -7,12 +7,13 @@ import ddf.minim.ugens.*;
 
 Minim minim;
 AudioOutput out;
+AudioPlayer babyCry;
 PImage note, baby;
 
 Robotito robotito;
 
-color cardColor, yellow, blue, green, red, white, markerColor, strokeColor, noteColor;
-int cardSize;
+color cardColor, yellow, blue, green, red, violet, white, markerColor, strokeColor, noteColor, babyColor;
+int cardSize, initPixelMat, inBoxMargin, maxPixelMat;
 boolean puttingCards, musicalMode, stopRobot;
 int blinkingTime;
 int blinkingPeriod;
@@ -28,6 +29,8 @@ void setup() {
   ellipseMode(CENTER);
   smooth();
   robotito = new Robotito(width/2, height/2);
+  note = loadImage("notes.png");
+  baby = loadImage("baby.jpeg");
 
   noStroke();
   background(255);
@@ -38,13 +41,18 @@ void setup() {
   blue = #2175FA;
   red = #FA0F2B;
   green = #02E01A;
+  violet = #A20FFF;
   white = #FFFFFF;
   markerColor = #000000;
   noteColor = #FFFFA50A;
   strokeColor = 185;
+  babyColor = -341849;
 
   cardColor = green;
   cardSize = 100;
+  initPixelMat = 60;
+  inBoxMargin = 40;
+  maxPixelMat = initPixelMat + (cardSize+inBoxMargin)*4 ;
   puttingCards = true;
   stopRobot = false;
 
@@ -61,12 +69,11 @@ void setup() {
   // use the getLineOut method of the Minim object to get an AudioOutput object
   out = minim.getLineOut();
   musicalMode = false;
-  note = loadImage("notes.png");
-  baby = loadImage("baby.jpeg");
+  babyCry = minim.loadFile("babyCry.mp3");
 }
 
 void draw() {
-  
+
   drawMat();
   displayCards();
   if (!stopRobot) {
@@ -130,23 +137,21 @@ void keyPressed() {
 
 void addCard(int x, int y) {
   if (cardColor == noteColor) {
-    allCards.add(new ImageCard(x, y, cardSize, cardColor));
+    allCards.add(new ImageCard(x, y, cardSize, cardColor, note));
   } else {
     allCards.add(new ColorCard(x, y, cardSize, cardColor));
   }
 }
 
 void drawMat() {
-  int initPixel = 60;
-  int maxPixel = initPixel + (cardSize+40)*4 ;
   background(255);
   stroke(0);
   strokeWeight(1);
-  for (int i=initPixel; i<= maxPixel; i=i+cardSize+40) {
-    line(initPixel, i, maxPixel, i);
+  for (int i=initPixelMat; i<= maxPixelMat; i=i+cardSize+inBoxMargin) {
+    line(initPixelMat, i, maxPixelMat, i);
   }
-  for (int i=initPixel; i<= maxPixel; i=i+cardSize+40) {
-    line(i, initPixel, i, maxPixel);
+  for (int i=initPixelMat; i<= maxPixelMat; i=i+cardSize+inBoxMargin) {
+    line(i, initPixelMat, i, maxPixelMat);
   }
 }
 void displayCards() {
@@ -169,7 +174,11 @@ void initWithCards() {
   x = x + cardSize + 10;
   allCards.add(new ColorCard(x, y, cardSize, blue, 4));
   x = x + cardSize + 10;
-  allCards.add(new ImageCard(x, y, cardSize, noteColor, 5));
+  allCards.add(new ImageCard(x, y, cardSize, noteColor, note, 5));
+  x = x + cardSize + 10;
+  allCards.add(new ColorCard(x, y, cardSize, violet, 6));
+  x = x + cardSize + 10;
+  allCards.add(new ImageCard(x, y, cardSize, babyColor, baby, 7));
 }
 
 void checkIfNewCardNeeded() {
@@ -192,6 +201,18 @@ void checkIfNewCardNeeded() {
   }
   x = x + cardSize + 10;
   if (get(x, y) != noteColor) {
-    allCards.add(new ImageCard(x, y, cardSize, noteColor));
+    allCards.add(new ImageCard(x, y, cardSize, noteColor, note));
   }
+    x = x + cardSize + 10;
+  if (get(x, y) != blue) {
+    allCards.add(new ColorCard(x, y, cardSize, violet));
+  }
+  x = x + cardSize + 10;
+  if (get(x, y) != babyColor) {
+    println("new baby");
+    allCards.add(new ImageCard(x, y, cardSize, babyColor, baby));
+  }
+}
+
+void putVioletInRandom(){
 }

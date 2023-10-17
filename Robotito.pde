@@ -20,12 +20,7 @@ class Robotito { //<>//
   void update() {
     xpos += speed*directionX;
     ypos += speed*directionY;
-    if ((ypos > height) || (ypos < 0)) {
-      directionY = 0;
-    }
-    if ((xpos > width) || (xpos < 0)) {
-      directionX = 0;
-    }
+    checkRobotitoPosition();
     // calculate offset necesary to change direction in the middle of the card depending direction
     int offsetX = directionX*offsetSensing*-1;
     int offsetY = directionY*offsetSensing*-1;
@@ -36,6 +31,23 @@ class Robotito { //<>//
           processColorAndId(currentCard.cardColor, currentCard.id);
         }
       }
+    }
+  }
+
+  void checkRobotitoPosition() {
+    if ((ypos+size/2) > maxPixelMat) { // over bottom line
+      ypos = ypos - 1;
+      directionY = 0;
+    } else if ((ypos-size/2) < initPixelMat) { //above top line
+      ypos = ypos + 1;
+      directionY = 0;
+    }
+    if ((xpos+size/2) > maxPixelMat) { // over bottom line
+      xpos = xpos - 1;
+      directionX = 0;
+    } else if ((xpos-size/2) < initPixelMat) { //above top line
+      xpos = xpos + 1;
+      directionX = 0;
     }
   }
   void drawRobotitoAndLights() {
@@ -160,6 +172,10 @@ class Robotito { //<>//
       case 4: // yellow
         drawArc(270, yellow);
         break;
+        case 5: // violet
+      drawSmile();
+      break;
+    }
       }
     }
   }
@@ -279,9 +295,32 @@ class Robotito { //<>//
     circle(0, 0, ledSize);
     popMatrix();
   }
+  void drawSmile() {
+    pushMatrix();
+    rotate(radians(45)); //eye right
+    translate(0, -ledDistance);
+    fill(violet);
+    stroke(strokeColor);
+    circle(0, 0, ledSize);
+    popMatrix();
+    pushMatrix();
+    rotate(radians(315)); //eye left
+    translate(0, -ledDistance);
+    circle(0, 0, ledSize);
+    popMatrix();
+    for (int i=0; i<12; i++) {
+      pushMatrix();
+      rotate(radians(90)+radians(360/24)*i);
+      translate(0, -ledDistance);
+      circle(0, 0, ledSize);
+      popMatrix();
+    }
+  }
 
   void processColorAndId(color currentColor, int id) {
-    if (currentColor == green || currentColor == yellow || currentColor == red || currentColor == blue || currentColor == noteColor) {
+
+    if (currentColor == green || currentColor == yellow || currentColor == red || currentColor == blue || currentColor == violet ||
+      currentColor == noteColor || currentColor == babyColor) {
       if (currentColor == noteColor) {
         musicalMode = !musicalMode;
         if (musicalMode) {
@@ -295,6 +334,20 @@ class Robotito { //<>//
           out.playNote(0.2, 0.1, 300);
           out.playNote(0.3, 0.1, 200);
         }
+      } else if (currentColor == babyColor) {
+        println("isplaying ", babyCry.isPlaying(), babyCry.position(), babyCry.length());
+        if ( !babyCry.isPlaying() ) {
+          if ( babyCry.position() >= 8064 )
+          {
+            babyCry.rewind();
+          }
+          babyCry.play();
+        }
+      } else if (currentColor == violet) {
+        directionY = 0;
+        directionX = 0;
+        activeDirection = 5;
+        
       } else {
         blinkingTime = 0;
         stopRobot = true;

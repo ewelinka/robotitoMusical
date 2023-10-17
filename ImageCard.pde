@@ -1,9 +1,12 @@
 class ImageCard extends ColorCard {
-  ImageCard(int x, int y, int cSize, color cColor) {
+  PImage img;
+  ImageCard(int x, int y, int cSize, color cColor, PImage pic) {
     super(x, y, cSize, cColor);
+    img = pic;
   }
-  ImageCard(int x, int y, int cSize, color cColor, int fixedId) {
+  ImageCard(int x, int y, int cSize, color cColor, PImage pic, int fixedId) {
     super(x, y, cSize, cColor, fixedId);
+    img = pic;
   }
 
   void addToBackground() {
@@ -15,6 +18,6 @@ class ImageCard extends ColorCard {
       noStroke();
     }
     rect(xpos, ypos, cardSize, cardSize);
-    image(note, xpos, ypos, cardSize, cardSize);
+    image(img, xpos, ypos, cardSize, cardSize);
   }
 }
