@@ -20,7 +20,7 @@ class Robotito { //<>//
   void update() {
     xpos += speed*directionX;
     ypos += speed*directionY;
-    checkRobotitoPosition();
+    //checkRobotitoPosition();//in anglo we dont care
     // calculate offset necesary to change direction in the middle of the card depending direction
     int offsetX = directionX*offsetSensing*-1;
     int offsetY = directionY*offsetSensing*-1;
@@ -172,10 +172,9 @@ class Robotito { //<>//
       case 4: // yellow
         drawArc(270, yellow);
         break;
-        case 5: // violet
-      drawSmile();
-      break;
-    }
+      case 5: // violet
+        drawSmile();
+        break;
       }
     }
   }
@@ -347,7 +346,6 @@ class Robotito { //<>//
         directionY = 0;
         directionX = 0;
         activeDirection = 5;
-        
       } else {
         blinkingTime = 0;
         stopRobot = true;

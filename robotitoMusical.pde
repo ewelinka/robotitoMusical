@@ -214,5 +214,50 @@ void checkIfNewCardNeeded() {
   }
 }
 
-void putVioletInRandom(){
+void newGame() {
+  robotito.activeDirection = 0;
+  allCards = new ArrayList<ColorCard>();
+  initWithCards(); // all the cards
+  // define the violet card position
+  // 1 top, 2 right, 3 bottom, 4 left
+  int zone = int(random(1, 5));
+  // first, second, third, fourth
+  int box = int(random(1, 5));
+  Pair violetXY = getXYFromIds(zone, box);
+
+  for (Card currentCard : allCards) {
+    if (currentCard.id == 5) { // violet!
+      currentCard.updatePosition(violetXY.x, violetXY.y);
+    }
+  }
+
+  //allCards.add(new ColorCard(violetXY.x, violetXY.y, cardSize, violet));
+
+  // define robots position (has to be in the same line as the card)
+  int robotitoZone = (zone+1)%4 + 1;
+  Pair robotitoXY = getXYFromIds(robotitoZone, box);
+  robotito.setXY(robotitoXY.x, robotitoXY.y);
+  
+}
+
+Pair getXYFromIds(int zone, int box) {
+  int cardX;
+  int cardY;
+  if (zone == 1 || zone == 3) {
+    cardX = initPixelMat+(cardSize+inBoxMargin)/2+(cardSize+inBoxMargin)*(box-1);
+    if (zone == 1) {
+      cardY = initPixelMat+(cardSize+inBoxMargin)/2; // first row
+    } else {
+      cardY = initPixelMat+(cardSize+inBoxMargin)/2+(cardSize+inBoxMargin)*3; // last row
+    }
+  } else {
+    cardY = initPixelMat+(cardSize+inBoxMargin)/2+(cardSize+inBoxMargin)*(box-1);
+    if (zone == 2) {
+      cardX = initPixelMat+(cardSize+inBoxMargin)/2+(cardSize+inBoxMargin)*3; // last column
+    } else { // zone == 4
+      cardX = initPixelMat+(cardSize+inBoxMargin)/2; // first column
+    }
+  }
+  Pair p = new Pair(cardX, cardY);
+  return p;
 }
