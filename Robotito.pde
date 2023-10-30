@@ -410,4 +410,9 @@ class Robotito { //<>//
   void setIsSelected(boolean is) {
     isSelected = is;
   }
+
+  void setXY(int x, int y) {
+    xpos = x;
+    ypos = y;
+  }
 }
