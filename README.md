@@ -1,0 +1,2 @@
+#Musical mode for Robotito
+This prototype incorporates two states for the robot: the normal state and the musical state. In the musical state, the robot executes its usual direction changes in response to color cards but also produces different sounds (notes or short sounds) for each color card. The state change occurs when the robot passes over the change state card (orange card) and is indicated by an activation or deactivation sound.
